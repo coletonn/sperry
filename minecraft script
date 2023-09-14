@@ -1,0 +1,29 @@
+var world = new World( 16, 16, 16 );
+world.createFlatWorld( 6 );
+var render = new Renderer( "renderSurface" );
+render.setWorld( world, 8 );
+render.setPerspective( 60, 0.01, 200 );
+var physics = new Physics();
+physics.setWorld( world );
+var player = new Player();
+player.setWorld( world );
+player.setInputCanvas( "renderSurface" );
+player.setMaterialSelector( "materialSelector" );
+{
+	var time = new Date().getTime() / 1000.0;
+	
+	// Simulate physics
+	physics.simulate();
+	
+	// Update local player
+	player.update();
+	
+	// Build a chunk
+	render.buildChunks( 5 );
+	
+	// Draw world
+	render.setCamera( player.getEyePos().toArray(), player.angles );
+	render.draw();
+	
+	while ( new Date().getTime() / 1000 - time < 0.016 );
+}, 1 );
